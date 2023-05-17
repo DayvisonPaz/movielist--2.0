@@ -14,6 +14,29 @@ initializeApp({
 });
 
 const db = getFirestore();
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////
+async function checktoken (req,res,next){
+  const authHeader = await req.headers['authorization']
+ 
+  if(!authHeader){
+    return res.status(401).json({msg:"acesso negado"+authHeader})}
+  try{
+    const secret = process.env.SECRET
+
+jwt.verify(authHeader,secret)
+
+next()}
+catch(err){console.log(err)}}
+
+
+
+
 //////////////////////////////////////////////////////////////
 app.post('/subscribe',async(req,res)=>{
   const {name,password} = req.body
@@ -30,14 +53,11 @@ const aTuringRef = db.collection('users').doc();
 await aTuringRef.set({
 "name":name,
 'pass':passwordHash,
-"token":""})
+"token":[],
+"favorites":[]})
 res.status(200).json({msg:"usuario criado com sucesso"})
 }}else{res.status(401).json({msg:"Usuario existente, faça login"})}})
 ///////////////////////////////////////////////////////////////////////////
-
-
-
-
 app.post("/login", async(req,res)=>{
     const {name,password} = req.body
 const users = db.collection('users');
@@ -52,7 +72,6 @@ snapshot.forEach(doc => {
   const token = jwt.sign({
     id:doc.data().name
       },secret,{expiresIn:600000})
-
   const update = await db.collection('users').doc(doc.id).update({token:token})
   res.status(200).json({token:token})}
 else{
@@ -60,6 +79,26 @@ else{
  }})})
 
 ///////////////////////////////////////////////////////////////////
+
+
+app.post('/favorite',checktoken,async (req,res)=>{
+  const {name,data} = req.body
+  const users = db.collection('users');
+const snapshot = await users.where('name', '==', `${name}`).get();
+
+snapshot.forEach(doc => {
+  run()
+  async function run(){ 
+  
+  const update = await db.collection('users').doc(doc.id).update({favorites:[...doc.data().favorites,data]})
+
+ }})
+  
+})
+
+
+
+
   app.post("/search",async(req,res)=>{
     const {data,genre} = req.body
     console.log(data)

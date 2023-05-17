@@ -1,7 +1,11 @@
 import React from 'react'
+import Header from './header';
 
 export default function Home() {
   return (
-    <div>Home</div>
+    <div>
+<Header></Header>
+      
+      Home aqui</div>
   )
 }
