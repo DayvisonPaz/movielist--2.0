@@ -2,3 +2,6 @@ node_modules
 # remove .env
 .env
 .Env
+/env
+/node_modules
+./env
