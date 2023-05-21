@@ -119,6 +119,7 @@ snapshot.forEach(doc => {
     setTimeout(resposta,2000)
     function resposta(){
       res.status(200).json(respo)  } })
+      
     .get('/movies', async(req,res)=>{
     const movies = []
     await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY}&page=1`).then(response=>movies.push(response.data)).catch(err=>console.log(err))
